@@ -6,6 +6,7 @@ let botonReiniciar = document.querySelector("#boton_reiniciar");
 let puntosJ1 = document.querySelector("#contenedor_j1 bold");
 let puntosJ2 = document.querySelector("#contenedor_j2 bold");
 let cartasJ1 = document.querySelector("#cartas_j1");
+let cartasJ2 = document.querySelector("#cartas_j2");
 
 function iniciarBaraja() {
   let palos = ["T", "C", "D", "P"];
@@ -66,26 +67,61 @@ botonPedir.addEventListener("click", () => {
   imagenCarta.setAttribute("src", carta.getRuta);
   imagenCarta.className = "carta";
 
-  if (puntosJ1.innerText < 21) {
-  cartasJ1.appendChild(imagenCarta);
-  puntosJ1.innerText = carta.getValor + Number(puntosJ1.innerText);
-  }
-  setTimeout (() =>{
-  puntosJ1.innerText > 21 && alert("Has perdido") && turnoBanca();;
-},500)
+    if (puntosJ1.innerText < 21) {
+      cartasJ1.appendChild(imagenCarta);
+      puntosJ1.innerText = carta.getValor + Number(puntosJ1.innerText);
+    }
+    setTimeout (() =>{
+      puntosJ1.innerText > 21 && alert("Has perdido, la banca gana");
+  },500)
+
+   
+
 
   // modificar el contador del span del jugador
   // modificar el contador del span de la banca
 });
 
 function turnoBanca() {
+  console.log("Jugando banca");
+  
+  let intervaloBanca = setInterval (() => {
+    let carta = baraja.pop();
+    //console.log(carta);
+    //mostrarBaraja();
+    let imagenCarta = document.createElement("img");
+    imagenCarta.setAttribute("src", carta.getRuta);
+    imagenCarta.className = "carta";
+  
+      if (puntosJ2.innerText < 21) {
+        cartasJ2.appendChild(imagenCarta);
+        puntosJ2.innerText = carta.getValor + Number(puntosJ2.innerText);
+      }
+      setTimeout (() =>{
+        if (puntosJ2.innerText >= 17){
+         clearInterval(intervaloBanca);
+         if (puntosJ1.innerText > puntosJ2.innerText){
+           alert("Jugador uno ganador")
+           
+         }
+         if (puntosJ1.innerText < puntosJ2.innerText){
+           alert("La banca gana")
+           
+         }
+         if (puntosJ1.innerText == puntosJ2.innerText){
+           alert("Empate")
+           
+         }
+        }
+    },500)
+  },1500);
 
-
-  if (puntosJ2.innerText > 21) {
-    alert("Has perdido");
-    turnoBanca();
-  } else{
-  cartasJ2.appendChild(imagenCarta);
-  puntosJ2.innerText = carta.getValor + Number(puntosJ2.innerText);
-  }
 }
+
+botonPlantar.addEventListener("click", () => {
+  if (puntosJ1.innerText <= 21) {
+    turnoBanca();
+  }else{
+    alert("La banca gana")
+  }
+});
